@@ -1,8 +1,9 @@
-package project.shimozukuri.banking.entities;
+package project.shimozukuri.banking.entities.user;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
+import project.shimozukuri.banking.entities.bank.MoneyAccount;
 import project.shimozukuri.banking.entities.enums.Role;
 
 import java.time.LocalDate;
@@ -26,6 +27,9 @@ public class User {
 
     @NotNull
     private String password;
+
+    @Transient
+    private String confirmPassword;
 
     @NotNull
     @ElementCollection

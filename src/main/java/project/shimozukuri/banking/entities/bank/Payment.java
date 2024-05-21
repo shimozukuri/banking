@@ -1,4 +1,4 @@
-package project.shimozukuri.banking.entities;
+package project.shimozukuri.banking.entities.bank;
 
 import jakarta.persistence.*;
 import lombok.Data;
