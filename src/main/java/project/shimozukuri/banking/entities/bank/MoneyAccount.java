@@ -1,9 +1,10 @@
-package project.shimozukuri.banking.entities;
+package project.shimozukuri.banking.entities.bank;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
+import project.shimozukuri.banking.entities.user.User;
 
 @Entity
 @Data
