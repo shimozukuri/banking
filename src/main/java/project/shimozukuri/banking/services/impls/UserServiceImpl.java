@@ -12,6 +12,7 @@ import project.shimozukuri.banking.entities.enums.Role;
 import project.shimozukuri.banking.entities.user.User;
 import project.shimozukuri.banking.mappers.UserMapper;
 import project.shimozukuri.banking.repositories.UserRepository;
+import project.shimozukuri.banking.services.MoneyAccountService;
 
 import java.util.Optional;
 import java.util.Set;
@@ -20,10 +21,10 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserDetailsService {
-
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final UserMapper userMapper;
+    private final MoneyAccountService moneyAccountService;
 
     @Override
     @Transactional
@@ -50,6 +51,7 @@ public class UserServiceImpl implements UserDetailsService {
         User user = userMapper.toEntity(userDto);
         user.setPassword(passwordEncoder.encode(userDto.getPassword()));
         user.setRoles(Set.of(Role.ROLE_USER));
+        user.setMoneyAccount(moneyAccountService.create(userDto.getBalance(), user));
 
         return userRepository.save(user);
     }
