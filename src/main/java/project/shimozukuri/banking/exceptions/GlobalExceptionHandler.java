@@ -19,4 +19,18 @@ public class GlobalExceptionHandler {
         log.error(e.getMessage(), e);
         return new AppError(e.getMessage());
     }
+
+    @ExceptionHandler(IllegalStateException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public AppError catchIllegalStateException(IllegalStateException e) {
+        log.error(e.getMessage(), e);
+        return new AppError(e.getMessage());
+    }
+
+    @ExceptionHandler(ResourceNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public AppError catchResourceNotFoundException(ResourceNotFoundException e) {
+        log.error(e.getMessage(), e);
+        return new AppError(e.getMessage());
+    }
 }
