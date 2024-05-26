@@ -14,13 +14,13 @@ public class Payment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Double sum;
+    private Double amount;
 
     @Column(name = "sender_id")
-    private Long senderMoneyAccount;
+    private Long senderMoneyAccountId;
 
     @Column(name = "recipient_id")
-    private Long recipientMoneyAccount;
+    private Long recipientMoneyAccountId;
 
     @Column(name = "payment_date")
     private LocalDateTime paymentDate;

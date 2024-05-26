@@ -52,11 +52,4 @@ public class UserController {
     ) {
         return userService.deletePhoneNumber(username, phoneNumberDto);
     }
-
-    @DeleteMapping
-    public void deleteByUsername(
-            @PathVariable(value = "username") String username
-    ) {
-        userService.deleteByUsername(username);
-    }
 }
