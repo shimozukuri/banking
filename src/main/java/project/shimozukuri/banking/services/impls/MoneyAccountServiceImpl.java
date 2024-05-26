@@ -32,6 +32,6 @@ public class MoneyAccountServiceImpl implements MoneyAccountService {
     }
 
     public MoneyAccount update(MoneyAccount moneyAccount) {
-        return moneyAccount;
+        return moneyAccountRepository.save(moneyAccount);
     }
 }

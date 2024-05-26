@@ -129,9 +129,4 @@ public class UserServiceImpl implements UserDetailsService {
             throw new IllegalStateException("Must be at least one phone number.");
         }
     }
-
-    @Transactional
-    public void deleteByUsername(String username) {
-        userRepository.deleteByUsername(username);
-    }
 }

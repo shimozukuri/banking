@@ -6,6 +6,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import project.shimozukuri.banking.dtos.authorization.JwtRequestDto;
 import project.shimozukuri.banking.dtos.authorization.JwtResponseDto;
 import project.shimozukuri.banking.dtos.user.UserDto;
@@ -22,6 +23,7 @@ public class AuthServiceImpl implements AuthService {
     private final AuthenticationManager authenticationManager;
 
     @Override
+    @Transactional
     public JwtResponseDto createAuthToken(JwtRequestDto authRequest) {
         try {
             authenticationManager.authenticate(
@@ -38,6 +40,7 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
+    @Transactional
     public User createNewUser(UserDto userDto) {
         if (!userDto.getPassword().equals(userDto.getConfirmPassword())) {
             throw new AccessDeniedException("Passwords don't match.");
