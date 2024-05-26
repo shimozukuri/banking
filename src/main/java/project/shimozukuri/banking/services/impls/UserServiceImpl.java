@@ -33,9 +33,7 @@ public class UserServiceImpl implements UserDetailsService {
     @Override
     @Transactional
     public UserDetails loadUserByUsername(String username) {
-        User user = getByUsername(username).orElseThrow(() ->
-                new ResourceNotFoundException(String.format("User '%s' not found.", username))
-        );
+        User user = getUserByUsername(username);
 
         return new org.springframework.security.core.userdetails.User(
                 user.getUsername(),
@@ -46,8 +44,15 @@ public class UserServiceImpl implements UserDetailsService {
     }
 
     @Transactional
-    public Optional<User> getByUsername(String username) {
+    public Optional<User> getOptionalUserByUsername(String username) {
         return userRepository.findByUsername(username);
+    }
+
+    @Transactional
+    public User getUserByUsername(String username) {
+        return getOptionalUserByUsername(username).orElseThrow(() ->
+                new ResourceNotFoundException(String.format("User '%s' not found.", username))
+        );
     }
 
     @Transactional
@@ -58,7 +63,7 @@ public class UserServiceImpl implements UserDetailsService {
         if (!userRepository.existsEmail(userDto.getEmail())) {
             user.setEmails(List.of(userDto.getEmail()));
         } else {
-            throw new IllegalStateException("Email already exists.");
+            throw new IllegalStateException("Email address already exists.");
         }
         if (!userRepository.existsPhoneNumber(userDto.getPhoneNumber())) {
             user.setPhoneNumbers(List.of(userDto.getPhoneNumber()));
@@ -72,24 +77,20 @@ public class UserServiceImpl implements UserDetailsService {
 
     @Transactional
     public User addEmail(String username, EmailDto emailDto) {
-        User user = getByUsername(username).orElseThrow(() ->
-                new ResourceNotFoundException(String.format("User '%s' not found.", username))
-        );
+        User user = getUserByUsername(username);
 
         if (!userRepository.existsEmail(emailDto.getEmail())) {
             user.addEmail(emailDto.getEmail());
             return userRepository.save(user);
         } else {
-            throw new IllegalStateException("Email already exists.");
+            throw new IllegalStateException("Email address already exists.");
         }
 
     }
 
     @Transactional
     public User addPhoneNumber(String username, PhoneNumberDto phoneNumberDto) {
-        User user = getByUsername(username).orElseThrow(() ->
-                new ResourceNotFoundException(String.format("User '%s' not found.", username))
-        );
+        User user = getUserByUsername(username);
 
         if (!userRepository.existsPhoneNumber(phoneNumberDto.getPhoneNumber())) {
             user.addPhoneNumber(phoneNumberDto.getPhoneNumber());
@@ -97,5 +98,40 @@ public class UserServiceImpl implements UserDetailsService {
         } else {
             throw new IllegalStateException("Phone number already exists.");
         }
+    }
+
+    @Transactional
+    public User deleteEmail(String username, EmailDto emailDto) {
+        User user = getUserByUsername(username);
+        boolean exists = userRepository.existsEmail(emailDto.getEmail());
+
+        if (exists && userRepository.findAllEmailsById(user.getId()).size() > 1) {
+            user.getEmails().remove(emailDto.getEmail());
+            return user;
+        } else if (!exists) {
+            throw new IllegalStateException("Email not found.");
+        } else {
+            throw new IllegalStateException("Must be at least one email address.");
+        }
+    }
+
+    @Transactional
+    public User deletePhoneNumber(String username, PhoneNumberDto phoneNumberDto) {
+        User user = getUserByUsername(username);
+        boolean exists = userRepository.existsPhoneNumber(phoneNumberDto.getPhoneNumber());
+
+        if (exists && userRepository.findAllPhoneNumbersById(user.getId()).size() > 1) {
+            user.getPhoneNumbers().remove(phoneNumberDto.getPhoneNumber());
+            return user;
+        } else if (!exists) {
+            throw new IllegalStateException("Phone number not found.");
+        } else {
+            throw new IllegalStateException("Must be at least one phone number.");
+        }
+    }
+
+    @Transactional
+    public void deleteByUsername(String username) {
+        userRepository.deleteByUsername(username);
     }
 }

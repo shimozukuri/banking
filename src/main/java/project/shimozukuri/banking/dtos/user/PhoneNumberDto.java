@@ -1,11 +1,9 @@
 package project.shimozukuri.banking.dtos.user;
 
 import jakarta.validation.constraints.Pattern;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @Data
-@AllArgsConstructor
 public class PhoneNumberDto {
 
     @Pattern(

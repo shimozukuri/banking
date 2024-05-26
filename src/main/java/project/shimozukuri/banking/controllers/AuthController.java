@@ -19,12 +19,16 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping("/login")
-    public JwtResponseDto createAuthToken(@RequestBody @Valid JwtRequestDto authRequest) {
+    public JwtResponseDto createAuthToken(
+            @RequestBody @Valid JwtRequestDto authRequest
+    ) {
         return authService.createAuthToken(authRequest);
     }
 
     @PostMapping("/register")
-    public User createNewUser(@RequestBody @Valid UserDto userDto) {
+    public User createNewUser(
+            @RequestBody @Valid UserDto userDto
+    ) {
         return authService.createNewUser(userDto);
     }
 }
