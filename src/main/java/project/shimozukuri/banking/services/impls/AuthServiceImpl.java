@@ -28,7 +28,7 @@ public class AuthServiceImpl implements AuthService {
                     new UsernamePasswordAuthenticationToken(authRequest.getUsername(), authRequest.getPassword())
             );
         } catch (AuthenticationException e) {
-            throw new AccessDeniedException("Invalid username or password");
+            throw new AccessDeniedException("Invalid username or password.");
         }
 
         UserDetails userDetails = userService.loadUserByUsername(authRequest.getUsername());
@@ -40,11 +40,11 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public User createNewUser(UserDto userDto) {
         if (!userDto.getPassword().equals(userDto.getConfirmPassword())) {
-            throw new AccessDeniedException("Passwords don't match");
+            throw new AccessDeniedException("Passwords don't match.");
         }
-        if (userService.getByUsername(userDto.getUsername()).isPresent()) {
+        if (userService.getOptionalUserByUsername(userDto.getUsername()).isPresent()) {
             throw new IllegalStateException(
-                    String.format("User '%s' already exists", userDto.getUsername())
+                    String.format("User '%s' already exists.", userDto.getUsername())
             );
         }
 
