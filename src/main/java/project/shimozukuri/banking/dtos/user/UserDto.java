@@ -1,37 +1,69 @@
 package project.shimozukuri.banking.dtos.user;
 
 
-import lombok.AllArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 import lombok.Data;
+import org.hibernate.validator.constraints.Length;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
-import java.util.List;
 
 @Data
-@AllArgsConstructor
 public class UserDto {
+
+    @NotNull(
+            message = "Username must be not null."
+    )
+    @Length(
+            max = 50,
+            message = "Username length must be smaller than 50 symbols."
+    )
     private String username;
+
+    @NotNull(
+            message = "Password must be not null."
+    )
+    @Length(
+            min = 8,
+            max = 255,
+            message = "Password must be at least 8 characters long."
+    )
     private String password;
+
+    @NotNull(
+            message = "Password confirmation must be not null."
+    )
     private String confirmPassword;
-    private List<String> phoneNumbers;
-    private List<String> emails;
+
+    @Pattern(
+            regexp = "^(8)\\d{10}$",
+            message = "Phone number does not match the format: 8XXXXXXXXXX."
+    )
+    private String phoneNumber;
+
+    @Pattern(
+            regexp = "^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\\.[a-zA-Z0-9-.]+$",
+            message = "Enter a valid email address."
+    )
+    private String email;
+
+    @DateTimeFormat(
+            iso = DateTimeFormat.ISO.DATE
+    )
+    @JsonFormat(
+            pattern = "dd.MM.yyyy"
+    )
     private LocalDate birthDay;
+
+
     private String name;
     private String surname;
     private String patronymic;
-    private Double balance;
 
-    public UserDto(
-            String username,
-            String password,
-            List<String> phoneNumbers,
-            List<String> emails,
-            Double balance
-    ) {
-        this.username = username;
-        this.password = password;
-        this.phoneNumbers = phoneNumbers;
-        this.emails = emails;
-        this.balance = balance;
-    }
+    @NotNull(
+            message = "Balance must be greater than null."
+    )
+    private Double balance;
 }
