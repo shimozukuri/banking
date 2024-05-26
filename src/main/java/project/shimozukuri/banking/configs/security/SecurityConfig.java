@@ -14,7 +14,6 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import project.shimozukuri.banking.services.impls.UserServiceImpl;
 
@@ -34,18 +33,29 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/user/*").permitAll()
-                        .requestMatchers("/user/*/notes").permitAll()
-                        .requestMatchers("/user/*/note/*").permitAll()
-                        .requestMatchers("/swagger-ui/**").permitAll()
-                        .requestMatchers("/v3/api-docs/**").permitAll()
-                        .requestMatchers("/auth").permitAll()
-                        .requestMatchers("/register").permitAll()
+                        .requestMatchers("/auth/**").permitAll()
                         .anyRequest().authenticated())
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .exceptionHandling(exception -> exception
-                        .authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED)))
+                .exceptionHandling(configurer -> configurer
+                        .authenticationEntryPoint(
+                                (request, response, exception) -> {
+                                    response.setStatus(
+                                            HttpStatus.UNAUTHORIZED
+                                                    .value()
+                                    );
+                                    response.getWriter()
+                                            .write("Unauthorized.");
+                                })
+                        .accessDeniedHandler(
+                                (request, response, exception) -> {
+                                    response.setStatus(
+                                            HttpStatus.FORBIDDEN
+                                                    .value()
+                                    );
+                                    response.getWriter()
+                                            .write("Unauthorized.");
+                                }))
                 .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();

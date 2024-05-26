@@ -2,8 +2,8 @@ package project.shimozukuri.banking.services.impls;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import project.shimozukuri.banking.dtos.authorization.JwtRequestDto;
@@ -27,8 +27,8 @@ public class AuthServiceImpl implements AuthService {
             authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(authRequest.getUsername(), authRequest.getPassword())
             );
-        } catch (BadCredentialsException e) {
-            throw new AccessDeniedException("Некорректный логин или пароль");
+        } catch (AuthenticationException e) {
+            throw new AccessDeniedException("Invalid username or password");
         }
 
         UserDetails userDetails = userService.loadUserByUsername(authRequest.getUsername());
@@ -40,11 +40,11 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public User createNewUser(UserDto userDto) {
         if (!userDto.getPassword().equals(userDto.getConfirmPassword())) {
-            throw new AccessDeniedException("Пароли не совпадают");
+            throw new AccessDeniedException("Passwords don't match");
         }
         if (userService.getByUsername(userDto.getUsername()).isPresent()) {
             throw new IllegalStateException(
-                    String.format("Пользователь %s уже существует", userDto.getUsername())
+                    String.format("User '%s' already exists", userDto.getUsername())
             );
         }
 

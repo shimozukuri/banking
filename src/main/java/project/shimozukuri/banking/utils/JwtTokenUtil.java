@@ -7,7 +7,6 @@ import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
@@ -23,7 +22,6 @@ import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
-@Slf4j
 public class JwtTokenUtil {
     private final JwtProperties jwtProperties;
     private SecretKey key;
@@ -57,8 +55,7 @@ public class JwtTokenUtil {
         try {
             return getAllClaimsFromToken(token).getSubject();
         } catch (ExpiredJwtException e) {
-            log.debug("Время жизи токена вышло");
-            throw new AccessDeniedException("Время жизи токена вышло");
+            throw new AccessDeniedException("The token's lifetime has expired.");
         }
     }
 
