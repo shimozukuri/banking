@@ -2,6 +2,7 @@ package project.shimozukuri.banking.controllers;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import project.shimozukuri.banking.dtos.user.EmailDto;
 import project.shimozukuri.banking.dtos.user.PhoneNumberDto;
@@ -15,6 +16,7 @@ public class UserController {
     private final UserServiceImpl userService;
 
     @GetMapping
+    @PreAuthorize("@cse.canAccess(#username)")
     public User getByUsername(
             @PathVariable(value = "username") String username
     ) {
@@ -22,6 +24,7 @@ public class UserController {
     }
 
     @PostMapping("/emails")
+    @PreAuthorize("@cse.canAccess(#username)")
     public User addEmail(
             @PathVariable(value = "username") String username,
             @RequestBody @Valid EmailDto emailDto
@@ -30,6 +33,7 @@ public class UserController {
     }
 
     @DeleteMapping("/emails")
+    @PreAuthorize("@cse.canAccess(#username)")
     public User deleteEmail(
             @PathVariable(value = "username") String username,
             @RequestBody @Valid EmailDto emailDto
@@ -38,6 +42,7 @@ public class UserController {
     }
 
     @PostMapping("/phone-numbers")
+    @PreAuthorize("@cse.canAccess(#username)")
     public User addEmail(
             @PathVariable(value = "username") String username,
             @RequestBody @Valid PhoneNumberDto phoneNumberDto
@@ -46,6 +51,7 @@ public class UserController {
     }
 
     @DeleteMapping("/phone-numbers")
+    @PreAuthorize("@cse.canAccess(#username)")
     public User deleteEmail(
             @PathVariable(value = "username") String username,
             @RequestBody @Valid PhoneNumberDto phoneNumberDto
