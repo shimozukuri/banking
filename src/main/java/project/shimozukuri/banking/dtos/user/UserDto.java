@@ -63,18 +63,6 @@ public class UserDto {
     )
     private String name;
 
-    @Length(
-            max = 30,
-            message = "Surname length must be smaller than 30 symbols."
-    )
-    private String surname;
-
-    @Length(
-            max = 30,
-            message = "Patronymic length must be smaller than 30 symbols."
-    )
-    private String patronymic;
-
     @NotNull(
             message = "Balance must be greater than null."
     )

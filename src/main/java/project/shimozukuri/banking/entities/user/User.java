@@ -32,8 +32,6 @@ public class User {
     private LocalDate birthDay;
 
     private String name;
-    private String surname;
-    private String patronymic;
 
     @Column(name = "email")
     @ElementCollection

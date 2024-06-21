@@ -39,34 +39,38 @@ public class PaymentServiceImpl implements PaymentService {
     @Override
     @Transactional
     public Payment createPayment(PaymentDto paymentDto, String username) {
-        MoneyAccount sender = userService.getUserByUsername(username).getMoneyAccount();
-        MoneyAccount recipient = moneyAccountService.getById(paymentDto.getRecipientMoneyAccountId());
+        synchronized (UserServiceImpl.class) {
+            synchronized (MoneyAccountService.class) {
+                MoneyAccount sender = userService.getUserByUsername(username).getMoneyAccount();
+                MoneyAccount recipient = moneyAccountService.getById(paymentDto.getRecipientMoneyAccountId());
 
-        if (paymentDto.getAmount() <= 0) {
-            throw new IllegalStateException("Amount must be greater than 0.");
+                if (paymentDto.getAmount() <= 0) {
+                    throw new IllegalStateException("Amount must be greater than 0.");
+                }
+                if (sender.equals(recipient)) {
+                    throw new IllegalStateException("You can't make a payment to yourself.");
+                }
+
+                if (sender.getBalance() - paymentDto.getAmount() >= 0) {
+                    sender.setBalance(sender.getBalance() - paymentDto.getAmount());
+                    sender.setMaxBalance(sender.getMaxBalance() - paymentDto.getAmount());
+                } else {
+                    throw new IllegalStateException("Insufficient funds on balance.");
+                }
+
+                recipient.setBalance(recipient.getBalance() + paymentDto.getAmount());
+                recipient.setMaxBalance(recipient.getMaxBalance() + paymentDto.getAmount());
+
+                moneyAccountService.update(sender);
+                moneyAccountService.update(recipient);
+
+                Payment payment = paymentMapper.toEntity(paymentDto);
+                payment.setSenderMoneyAccountId(sender.getId());
+                payment.setPaymentDate(LocalDateTime.now());
+
+                return paymentRepository.save(payment);
+            }
         }
-        if (sender.equals(recipient)) {
-            throw new IllegalStateException("You can't make a payment to yourself.");
-        }
-
-        if (sender.getBalance() - paymentDto.getAmount() >= 0) {
-            sender.setBalance(sender.getBalance() - paymentDto.getAmount());
-            sender.setMaxBalance(sender.getMaxBalance() - paymentDto.getAmount());
-        } else {
-            throw new IllegalStateException("Insufficient funds on balance.");
-        }
-
-        recipient.setBalance(recipient.getBalance() + paymentDto.getAmount());
-        recipient.setMaxBalance(recipient.getMaxBalance() + paymentDto.getAmount());
-
-        moneyAccountService.update(sender);
-        moneyAccountService.update(recipient);
-
-        Payment payment = paymentMapper.toEntity(paymentDto);
-        payment.setSenderMoneyAccountId(sender.getId());
-        payment.setPaymentDate(LocalDateTime.now());
-
-        return paymentRepository.save(payment);
     }
 
 }

@@ -10,12 +10,14 @@ import org.springframework.transaction.annotation.Transactional;
 import project.shimozukuri.banking.dtos.user.EmailDto;
 import project.shimozukuri.banking.dtos.user.PhoneNumberDto;
 import project.shimozukuri.banking.dtos.user.UserDto;
+import project.shimozukuri.banking.entities.bank.MoneyAccount;
 import project.shimozukuri.banking.entities.enums.Role;
 import project.shimozukuri.banking.entities.user.User;
 import project.shimozukuri.banking.exceptions.ResourceNotFoundException;
 import project.shimozukuri.banking.mappers.UserMapper;
 import project.shimozukuri.banking.repositories.UserRepository;
 import project.shimozukuri.banking.services.MoneyAccountService;
+import project.shimozukuri.banking.services.threads.PercentThread;
 
 import java.util.List;
 import java.util.Optional;
@@ -29,6 +31,7 @@ public class UserServiceImpl implements UserDetailsService {
     private final PasswordEncoder passwordEncoder;
     private final UserMapper userMapper;
     private final MoneyAccountService moneyAccountService;
+    private final PercentThread percentThread;
 
     @Override
     @Transactional
@@ -70,7 +73,11 @@ public class UserServiceImpl implements UserDetailsService {
         } else {
             throw new IllegalStateException("Phone number already exists.");
         }
-        user.setMoneyAccount(moneyAccountService.create(userDto.getBalance()));
+
+        MoneyAccount moneyAccount = moneyAccountService.create(userDto.getBalance());
+        user.setMoneyAccount(moneyAccount);
+
+        startPercentThread(user.getUsername());
 
         return userRepository.save(user);
     }
@@ -128,5 +135,9 @@ public class UserServiceImpl implements UserDetailsService {
         } else {
             throw new IllegalStateException("Must be at least one phone number.");
         }
+    }
+
+    public void startPercentThread(String username) {
+        percentThread.startPercentThread(username);
     }
 }
