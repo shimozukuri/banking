@@ -47,7 +47,7 @@ public class GlobalExceptionHandler {
             final MethodArgumentNotValidException e
     ) {
         log.error(e.getMessage(), e);
-        AppError appError = new AppError("Validation failed.");
+        AppError appError = new AppError("Validation failed");
         List<FieldError> errors = e.getBindingResult().getFieldErrors();
         appError.setErrors(errors.stream()
                 .collect(Collectors.toMap(
