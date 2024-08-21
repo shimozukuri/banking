@@ -13,18 +13,13 @@ import java.time.LocalDate;
 @Data
 public class UserDto {
 
-    @NotNull(
-            message = "Username must be not null."
-    )
     @Length(
+            min = 2,
             max = 50,
-            message = "Username length must be smaller than 50 symbols."
+            message = "Username length must be at least 2 and smaller than 50 symbols."
     )
     private String username;
 
-    @NotNull(
-            message = "Password must be not null."
-    )
     @Length(
             min = 8,
             max = 255,

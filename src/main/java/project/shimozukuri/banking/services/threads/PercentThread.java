@@ -1,19 +1,23 @@
 package project.shimozukuri.banking.services.threads;
 
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 import project.shimozukuri.banking.entities.bank.MoneyAccount;
 import project.shimozukuri.banking.services.MoneyAccountService;
 import project.shimozukuri.banking.services.impls.UserServiceImpl;
 
 import static java.util.concurrent.TimeUnit.MINUTES;
-
 @Component
-@RequiredArgsConstructor
 public class PercentThread {
     private final MoneyAccountService moneyAccountService;
     private final UserServiceImpl userService;
 
+    @Autowired
+    public PercentThread(MoneyAccountService moneyAccountService, @Lazy UserServiceImpl userService) {
+        this.moneyAccountService = moneyAccountService;
+        this.userService = userService;
+    }
 
     public void startPercentThread(String username) {
         Thread percentThread = new Thread(() -> {
