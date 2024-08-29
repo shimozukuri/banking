@@ -49,7 +49,7 @@ Creates new user and money account
 **Exception:**
 - using an existing username - `User 'username' already exists.`
 - using a too short or too long username - `Username length must be at least 2 and smaller than 50 symbols.`
-- using the wrong password to confirm - `Password don't match.`
+- using the invalid password to confirm - `Password don't match.`
 - using a short password - `Password must be at least 8 characters long.`
 - using an existing phone number - `Phone number already exists.`
 - using wrong format of the phone number - `Phone number does not match the format: 8XXXXXXXXXX.`
@@ -77,7 +77,7 @@ Authenticates user and returns authorization token
 ![auth_login_response.jpg](screens/auth_login_respose.jpg)
 
 **Exception:**
-- using wrong username or password - `Invalid username or password.`
+- using an invalid username or password - `Invalid username or password.`
 
 ## Profile
 
@@ -100,7 +100,7 @@ Returns user `{username}`
 
 **Exception:**
 - using an invalid token - `Unauthorized.` 401 Unauthorized
-- using someone else token - `Unauthorized.` 403 Forbbiden
+- using someone else's token - `Unauthorized.` 403 Forbbiden
 
 ### `POST` /profile/{username}/emails
 
@@ -128,7 +128,7 @@ Adds new email to the user `{username}`
 
 **Exception:**
 - using an invalid token - `Unauthorized.` 401 Unauthorized
-- using someone else token - `Unauthorized.` 403 Forbbiden
+- using someone else's token - `Unauthorized.` 403 Forbbiden
 - using an existing email - `Email address already exists.`
 - using invalid email - `Enter a valid email address.`
 
@@ -158,7 +158,7 @@ Deletes email to the user `{username}`
 
 **Exception:**
 - using an invalid token - `Unauthorized.` 401 Unauthorized
-- using someone else token - `Unauthorized.` 403 Forbbiden
+- using someone else's token - `Unauthorized.` 403 Forbbiden
 - deleting not exist email - `Email not found.`
 - deleting the last email - `Must be at least one email address.`
 
@@ -188,7 +188,7 @@ Adds new phone number to the user `{username}`
 
 **Exception**
 - using an invalid token - `Unauthorized.` 401 Unauthorized
-- using someone else token - `Unauthorized.` 403 Forbbiden
+- using someone else's token - `Unauthorized.` 403 Forbbiden
 - using an existing phone number - `Phone number already exists.`
 - using wrong format of the phone number - `Phone number does not match the format: 8XXXXXXXXXX.`
 
@@ -218,7 +218,7 @@ Deletes phone number to the user `{username}`
 
 **Exception**
 - using an invalid token - `Unauthorized.` 401 Unauthorized
-- using someone else token - `Unauthorized.` 403 Forbbiden
+- using someone else's token - `Unauthorized.` 403 Forbbiden
 - deleting not exist phone number - `Phone number not found.`
 - deleting the last phone number - `Must be at least one phone number.` 
 
@@ -241,7 +241,7 @@ Returns all payment user `{username}`
 
 **Exception**
 - using an invalid token - `Unauthorized.` 401 Unauthorized
-- using someone else token - `Unauthorized.` 403 Forbbiden
+- using someone else's token - `Unauthorized.` 403 Forbbiden
 
 ### `POST` /payment/{username}
 
@@ -268,6 +268,6 @@ Transfers "money" from the user `{username}` money account to the money account 
 
 **Exception**
 - using an invalid token - `Unauthorized.` 401 Unauthorized
-- using someone else token - `Unauthorized.` 403 Forbbiden
+- using someone else's token - `Unauthorized.` 403 Forbbiden
 - transfering less than 1 - `Amount must be greater than 0.`
 - transfering on the not existing money account - `Money account not found.`
