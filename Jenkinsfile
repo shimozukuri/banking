@@ -24,9 +24,7 @@ pipeline {
         }
         stage('Test') {
             steps {
-                sh 'docker compose up -d'
-                sh 'docker ps'
-                sh 'docker stop $(docker ps -a -q)'
+                sh 'docker build -t pastebin/jenkins-images:0.1 .'
             }
         }
     }
