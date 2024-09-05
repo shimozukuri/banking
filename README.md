@@ -8,6 +8,8 @@ The service of "banking" operations. There are users (clients) in the system, ea
 - JWT
 - MapStruct
 - Lombok
+- Docker
+- Jenkins
 - PostgreSQL
 
 
