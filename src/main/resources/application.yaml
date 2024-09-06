@@ -1,9 +1,12 @@
 spring:
     datasource:
-      url: jdbc:postgresql://localhost:5432/banking?currentSchema=banking
-      username: postgres
-      password: postgres
       driver-class-name: org.postgresql.Driver
+      url: jdbc:postgresql://${HOST}:5432/${POSTGRES_DATABASE}?currenSchema=${POSTGRES_SCHEMA}
+      username: ${POSTGRES_USERNAME}
+      password: ${POSTGRES_PASSWORD}
+    config:
+      import: optional:file:.env[.properties]
+
 jwt:
-    secret: 984hg493gh0439rthr0429uruj2309yh937gc763fe87t3f89723gf
+    secret: ${JWT_SECRET}
     lifetime: 10m

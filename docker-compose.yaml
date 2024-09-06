@@ -1,25 +1,33 @@
-version: '2'
+version: '3'
+
+networks:
+  banking:
+    driver: bridge
 
 services:
   app:
     build:
       context: .
     container_name: banking
+    networks:
+      - banking
     depends_on:
       - db
-    environment:
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/banking?currenSchema=banking
-      - SPRING_DATASOURCE_USERNAME=postgres
-      - SPRING_DATASOURCE_PASSWORD=postgres
+    env_file:
+      - .env
     ports:
       - '8080:8080'
 
   db:
     image: postgres:16.0-alpine
     container_name: postgres
+    networks:
+      - banking
     environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
-      - POSTGRES_DB=banking
+      - POSTGRES_USER=${POSTGRES_USERNAME}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DATABASE}
+    ports:
+      - '5432:5432'
     volumes:
       - ./src/main/resources/db-init:/docker-entrypoint-initdb.d
