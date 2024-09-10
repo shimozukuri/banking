@@ -4,6 +4,10 @@ spring:
       url: jdbc:postgresql://${HOST}:5432/${POSTGRES_DATABASE}?currenSchema=${POSTGRES_SCHEMA}
       username: ${POSTGRES_USERNAME}
       password: ${POSTGRES_PASSWORD}
+    liquibase:
+      change-log: classpath:liquibase/db.changelog.yaml
+      enabled: true
+      default-schema: banking
     config:
       import: optional:file:.env[.properties]
 
