@@ -6,8 +6,10 @@ The service of "banking" operations. There are users (clients) in the system, ea
 - Java 17
 - Spring
 - JWT
+- Liquibase
 - MapStruct
 - Lombok
+- GitHub Actions
 - Docker
 - Jenkins
 - PostgreSQL
